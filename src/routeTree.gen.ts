@@ -9,38 +9,255 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VendasRouteImport } from './routes/vendas'
+import { Route as UsuariosRouteImport } from './routes/usuarios'
+import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as OsInternaRouteImport } from './routes/os-interna'
+import { Route as OsExternaRouteImport } from './routes/os-externa'
+import { Route as OficinaRouteImport } from './routes/oficina'
+import { Route as MuralRouteImport } from './routes/mural'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as ClientesRouteImport } from './routes/clientes'
+import { Route as BkpRouteImport } from './routes/bkp'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FinalizarOsIdRouteImport } from './routes/finalizar.$osId'
 
+const VendasRoute = VendasRouteImport.update({
+  id: '/vendas',
+  path: '/vendas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsuariosRoute = UsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatoriosRoute = RelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OsInternaRoute = OsInternaRouteImport.update({
+  id: '/os-interna',
+  path: '/os-interna',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OsExternaRoute = OsExternaRouteImport.update({
+  id: '/os-externa',
+  path: '/os-externa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OficinaRoute = OficinaRouteImport.update({
+  id: '/oficina',
+  path: '/oficina',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MuralRoute = MuralRouteImport.update({
+  id: '/mural',
+  path: '/mural',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BkpRoute = BkpRouteImport.update({
+  id: '/bkp',
+  path: '/bkp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FinalizarOsIdRoute = FinalizarOsIdRouteImport.update({
+  id: '/finalizar/$osId',
+  path: '/finalizar/$osId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bkp': typeof BkpRoute
+  '/clientes': typeof ClientesRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/mural': typeof MuralRoute
+  '/oficina': typeof OficinaRoute
+  '/os-externa': typeof OsExternaRoute
+  '/os-interna': typeof OsInternaRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/usuarios': typeof UsuariosRoute
+  '/vendas': typeof VendasRoute
+  '/finalizar/$osId': typeof FinalizarOsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bkp': typeof BkpRoute
+  '/clientes': typeof ClientesRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/mural': typeof MuralRoute
+  '/oficina': typeof OficinaRoute
+  '/os-externa': typeof OsExternaRoute
+  '/os-interna': typeof OsInternaRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/usuarios': typeof UsuariosRoute
+  '/vendas': typeof VendasRoute
+  '/finalizar/$osId': typeof FinalizarOsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bkp': typeof BkpRoute
+  '/clientes': typeof ClientesRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/mural': typeof MuralRoute
+  '/oficina': typeof OficinaRoute
+  '/os-externa': typeof OsExternaRoute
+  '/os-interna': typeof OsInternaRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/usuarios': typeof UsuariosRoute
+  '/vendas': typeof VendasRoute
+  '/finalizar/$osId': typeof FinalizarOsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bkp'
+    | '/clientes'
+    | '/configuracoes'
+    | '/mural'
+    | '/oficina'
+    | '/os-externa'
+    | '/os-interna'
+    | '/relatorios'
+    | '/usuarios'
+    | '/vendas'
+    | '/finalizar/$osId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bkp'
+    | '/clientes'
+    | '/configuracoes'
+    | '/mural'
+    | '/oficina'
+    | '/os-externa'
+    | '/os-interna'
+    | '/relatorios'
+    | '/usuarios'
+    | '/vendas'
+    | '/finalizar/$osId'
+  id:
+    | '__root__'
+    | '/'
+    | '/bkp'
+    | '/clientes'
+    | '/configuracoes'
+    | '/mural'
+    | '/oficina'
+    | '/os-externa'
+    | '/os-interna'
+    | '/relatorios'
+    | '/usuarios'
+    | '/vendas'
+    | '/finalizar/$osId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BkpRoute: typeof BkpRoute
+  ClientesRoute: typeof ClientesRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  MuralRoute: typeof MuralRoute
+  OficinaRoute: typeof OficinaRoute
+  OsExternaRoute: typeof OsExternaRoute
+  OsInternaRoute: typeof OsInternaRoute
+  RelatoriosRoute: typeof RelatoriosRoute
+  UsuariosRoute: typeof UsuariosRoute
+  VendasRoute: typeof VendasRoute
+  FinalizarOsIdRoute: typeof FinalizarOsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vendas': {
+      id: '/vendas'
+      path: '/vendas'
+      fullPath: '/vendas'
+      preLoaderRoute: typeof VendasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/usuarios': {
+      id: '/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof UsuariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatorios': {
+      id: '/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof RelatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/os-interna': {
+      id: '/os-interna'
+      path: '/os-interna'
+      fullPath: '/os-interna'
+      preLoaderRoute: typeof OsInternaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/os-externa': {
+      id: '/os-externa'
+      path: '/os-externa'
+      fullPath: '/os-externa'
+      preLoaderRoute: typeof OsExternaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oficina': {
+      id: '/oficina'
+      path: '/oficina'
+      fullPath: '/oficina'
+      preLoaderRoute: typeof OficinaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mural': {
+      id: '/mural'
+      path: '/mural'
+      fullPath: '/mural'
+      preLoaderRoute: typeof MuralRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bkp': {
+      id: '/bkp'
+      path: '/bkp'
+      fullPath: '/bkp'
+      preLoaderRoute: typeof BkpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +265,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/finalizar/$osId': {
+      id: '/finalizar/$osId'
+      path: '/finalizar/$osId'
+      fullPath: '/finalizar/$osId'
+      preLoaderRoute: typeof FinalizarOsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BkpRoute: BkpRoute,
+  ClientesRoute: ClientesRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  MuralRoute: MuralRoute,
+  OficinaRoute: OficinaRoute,
+  OsExternaRoute: OsExternaRoute,
+  OsInternaRoute: OsInternaRoute,
+  RelatoriosRoute: RelatoriosRoute,
+  UsuariosRoute: UsuariosRoute,
+  VendasRoute: VendasRoute,
+  FinalizarOsIdRoute: FinalizarOsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
