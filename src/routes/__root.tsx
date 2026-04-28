@@ -53,7 +53,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function Gate() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen grid place-items-center bg-background text-sm text-muted-foreground">
+        Carregando...
+      </div>
+    );
+  }
   if (!user) return <LoginPage />;
   return (
     <AppShell>
