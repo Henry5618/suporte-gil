@@ -1,48 +1,83 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import { usuariosMock } from "./mockData";
-import type { Usuario, Perfil } from "./types";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { authService, type Perfil as PerfilApi, type UsuarioApi } from "@/services/authService";
+
+// Mantém compatibilidade com o restante do código existente
+export type Perfil = "admin" | "gestor" | "tecnico" | "oficina";
+
+export interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  perfil: Perfil;
+  perfilApi: PerfilApi;
+  ativo: boolean;
+  criadoEm: string;
+}
+
+const perfilApiToLocal: Record<PerfilApi, Perfil> = {
+  ADMIN: "admin",
+  GESTOR: "gestor",
+  TECNICO: "tecnico",
+  TECNICO_OFICINA: "oficina",
+};
+
+function fromApi(u: UsuarioApi): Usuario {
+  return {
+    id: String(u.id),
+    nome: u.nome,
+    email: u.email,
+    perfil: perfilApiToLocal[u.perfil],
+    perfilApi: u.perfil,
+    ativo: u.ativo,
+    criadoEm: u.criado_em,
+  };
+}
 
 interface AuthCtx {
   user: Usuario | null;
-  login: (email: string, _senha: string) => boolean;
+  loading: boolean;
+  login: (email: string, senha: string) => Promise<boolean>;
   logout: () => void;
-  switchProfile: (perfil: Perfil) => void;
+  switchProfile: (_perfil: Perfil) => void;
 }
 
 const Ctx = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<Usuario | null>(() => {
-    if (typeof window === "undefined") return null;
-    const raw = localStorage.getItem("auth-user");
-    return raw ? JSON.parse(raw) : null;
-  });
+  const [user, setUser] = useState<Usuario | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const persist = (u: Usuario | null) => {
-    setUser(u);
-    if (typeof window !== "undefined") {
-      if (u) localStorage.setItem("auth-user", JSON.stringify(u));
-      else localStorage.removeItem("auth-user");
-    }
-  };
+  useEffect(() => {
+    let active = true;
+    authService
+      .me()
+      .then((u) => active && setUser(fromApi(u)))
+      .catch(() => active && setUser(null))
+      .finally(() => active && setLoading(false));
+    return () => {
+      active = false;
+    };
+  }, []);
 
-  const login = (email: string, _senha: string) => {
-    const found = usuariosMock.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (found) {
-      persist(found);
+  const login = async (email: string, senha: string) => {
+    try {
+      const u = await authService.login(email, senha);
+      setUser(fromApi(u));
       return true;
+    } catch {
+      return false;
     }
-    return false;
   };
 
-  const logout = () => persist(null);
-
-  const switchProfile = (perfil: Perfil) => {
-    const found = usuariosMock.find((u) => u.perfil === perfil);
-    if (found) persist(found);
+  const logout = () => {
+    authService.logout();
+    setUser(null);
   };
 
-  return <Ctx.Provider value={{ user, login, logout, switchProfile }}>{children}</Ctx.Provider>;
+  // Sem efeito agora — autenticação é real. Mantido para compatibilidade.
+  const switchProfile = (_perfil: Perfil) => {};
+
+  return <Ctx.Provider value={{ user, loading, login, logout, switchProfile }}>{children}</Ctx.Provider>;
 }
 
 export function useAuth() {
@@ -55,16 +90,18 @@ export function can(perfil: Perfil | undefined, action: string): boolean {
   if (!perfil) return false;
   if (perfil === "admin") return true;
   const map: Record<string, Perfil[]> = {
-    "criar.os.interna": ["gestor", "tecnico"],
-    "criar.os.externa": ["gestor", "tecnico"],
+    "criar.os.interna": ["gestor", "tecnico", "oficina"],
+    "criar.os.externa": ["gestor", "tecnico", "oficina"],
     "criar.os.oficina": ["gestor", "oficina"],
     "atribuir.tecnico": ["gestor"],
     "validar.os": ["gestor"],
     "ver.relatorios": ["gestor"],
+    "ver.vendas": ["gestor"],
     "gerenciar.usuarios": [],
-    "gerenciar.config": ["gestor"],
-    "ver.oficina": ["gestor", "oficina", "tecnico"],
-    "atualizar.oficina": ["oficina", "tecnico"],
+    "gerenciar.config": [], // só admin
+    "ver.oficina": ["gestor", "oficina"],
+    "atualizar.oficina": ["oficina"],
+    "ver.bkp": ["gestor", "oficina"],
   };
   return map[action]?.includes(perfil) ?? true;
 }
