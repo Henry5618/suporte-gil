@@ -11,22 +11,34 @@ export function LoginPage() {
   const [email, setEmail] = useState("admin@empresa.com");
   const [senha, setSenha] = useState("123456");
 
+  const [loading, setLoading] = useState(false);
+
+  const doLogin = async (em: string, sn: string) => {
+    setLoading(true);
+    try {
+      const ok = await login(em, sn);
+      if (!ok) toast.error("E-mail ou senha inválidos");
+      else toast.success("Bem-vindo!");
+    } catch {
+      toast.error("Falha ao conectar com o backend. Verifique se a API está rodando em VITE_API_URL.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !senha) {
       toast.error("Preencha e-mail e senha");
       return;
     }
-    if (!login(email, senha)) {
-      toast.error("Usuário não encontrado");
-    } else {
-      toast.success("Bem-vindo!");
-    }
+    void doLogin(email, senha);
   };
 
   const quickLogin = (em: string) => {
     setEmail(em);
-    login(em, "123456");
+    setSenha("123456");
+    void doLogin(em, "123456");
   };
 
   return (
@@ -69,7 +81,7 @@ export function LoginPage() {
               <Label htmlFor="senha">Senha</Label>
               <Input id="senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} className="mt-1.5" />
             </div>
-            <Button type="submit" className="w-full">Entrar</Button>
+            <Button type="submit" className="w-full" disabled={loading}>{loading ? "Entrando..." : "Entrar"}</Button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-border">
@@ -77,7 +89,7 @@ export function LoginPage() {
             <div className="grid grid-cols-2 gap-2">
               <Button size="sm" variant="outline" onClick={() => quickLogin("admin@empresa.com")}>Administrador</Button>
               <Button size="sm" variant="outline" onClick={() => quickLogin("gestor@empresa.com")}>Gestor</Button>
-              <Button size="sm" variant="outline" onClick={() => quickLogin("joao@empresa.com")}>Técnico</Button>
+              <Button size="sm" variant="outline" onClick={() => quickLogin("tecnico@empresa.com")}>Técnico</Button>
               <Button size="sm" variant="outline" onClick={() => quickLogin("oficina@empresa.com")}>Oficina</Button>
             </div>
           </div>
